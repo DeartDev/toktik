@@ -1,3 +1,8 @@
+/// Lista de datos de videos locales en formato JSON
+/// 
+/// Esta lista contiene la información de los videos que se mostrarán
+/// en la aplicación, incluyendo nombre, URL del video, likes y vistas.
+/// Los videos están almacenados en la carpeta assets/videos/
 List<Map<String, dynamic>> videoPosts = [
   {
     'name': 'Subiendo escaleras automáticas',
