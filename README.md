@@ -11,9 +11,11 @@ TokTik es una aplicación móvil desarrollada en Flutter que replica la experien
 - **Scroll vertical de videos**: Navegación fluida entre videos usando gestos verticales
 - **Interfaz tipo TikTok**: Diseño familiar e intuitivo similar a redes sociales populares
 - **Sistema de likes y vistas**: Visualización de estadísticas de interacción para cada video
+- **Formateo de números**: Números formateados en notación compacta (K, M, B) para mejor legibilidad
 - **Tema oscuro**: Interfaz optimizada en modo oscuro para mejor experiencia visual
 - **Gestión de estado con Provider**: Arquitectura escalable y mantenible
 - **Carga asíncrona**: Simulación de carga de contenido con indicadores de progreso
+- **Código documentado**: Comentarios descriptivos en todo el código para mejor mantenibilidad
 
 ## 🏗️ Arquitectura del Proyecto
 
@@ -22,6 +24,7 @@ El proyecto sigue una arquitectura limpia organizada en capas:
 ```
 lib/
 ├── config/           # Configuración de la aplicación
+│   ├── helpers/     # Funciones helper y utilidades
 │   └── theme/       # Temas y estilos
 ├── domain/          # Lógica de negocio y entidades
 │   └── entities/    # Entidades del dominio
@@ -57,6 +60,7 @@ lib/
 
 - **flutter**: SDK de Flutter
 - **provider**: Gestión de estado reactiva
+- **intl**: Formateo de números y fechas internacionalizadas
 - **video_player** (futura integración): Reproducción de videos
 
 ## 🎯 Uso
