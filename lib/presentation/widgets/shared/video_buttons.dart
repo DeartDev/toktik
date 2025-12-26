@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toktik/config/helpers/human_formats.dart';
 import 'package:toktik/domain/entities/video_post.dart';
 
 /// Widget que muestra los botones de interacción de un video
@@ -62,7 +63,7 @@ class _CustomIconButtom extends StatelessWidget {
         ),
         
         // Contador de valor
-        Text('$value'),
+        Text(HumanFormats.humanReadableNumber(value.toDouble())),
       ],
     );
   }
