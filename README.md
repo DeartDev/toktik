@@ -8,13 +8,17 @@ TokTik es una aplicación móvil desarrollada en Flutter que replica la experien
 
 ## ✨ Características
 
-- **Scroll vertical de videos**: Navegación fluida entre videos usando gestos verticales
+- **Scroll vertical de videos**: Navegación fluida entre videos usando gestos verticales similar a TikTok
+- **Reproducción automática**: Los videos se reproducen automáticamente con loop infinito
+- **Controles de reproducción**: Toque en pantalla para pausar/reanudar videos
 - **Interfaz tipo TikTok**: Diseño familiar e intuitivo similar a redes sociales populares
 - **Sistema de likes y vistas**: Visualización de estadísticas de interacción para cada video
 - **Formateo de números**: Números formateados en notación compacta (K, M, B) para mejor legibilidad
+- **Gradiente decorativo**: Fondo con gradiente para mejorar legibilidad del texto
 - **Tema oscuro**: Interfaz optimizada en modo oscuro para mejor experiencia visual
 - **Gestión de estado con Provider**: Arquitectura escalable y mantenible
 - **Carga asíncrona**: Simulación de carga de contenido con indicadores de progreso
+- **Animaciones**: Efectos visuales con animate_do para mejor UX
 - **Código documentado**: Comentarios descriptivos en todo el código para mejor mantenibilidad
 
 ## 🏗️ Arquitectura del Proyecto
@@ -23,26 +27,49 @@ El proyecto sigue una arquitectura limpia organizada en capas:
 
 ```
 lib/
-├── config/           # Configuración de la aplicación
-│   ├── helpers/     # Funciones helper y utilidades
-│   └── theme/       # Temas y estilos
-├── domain/          # Lógica de negocio y entidades
-│   └── entities/    # Entidades del dominio
-├── infrastructure/  # Implementaciones técnicas
-│   └── models/      # Modelos de datos
-├── presentation/    # Capa de presentación
-│   ├── providers/   # Gestión de estado
-│   ├── screens/     # Pantallas de la aplicación
-│   └── widgets/     # Componentes reutilizables
-└── shared/          # Recursos compartidos
-    └── data/        # Datos locales y constantes
+├── config/              # Configuración de la aplicación
+│   ├── helpers/        # Funciones helper y utilidades
+│   │   └── human_formats.dart
+│   └── theme/          # Temas y estilos
+│       └── app_theme.dart
+├── domain/             # Lógica de negocio y entidades
+│   └── entities/       # Entidades del dominio
+│       └── video_post.dart
+├── infrastructure/     # Capa de datos y servicios externos
+│   └── models/         # Modelos de datos
+│       └── local_video_model.dart
+├── presentation/       # Capa de presentación (UI)
+│   ├── providers/      # Gestión de estado con Provider
+│   │   └── discover_provider.dart
+│   ├── screens/        # Pantallas de la aplicación
+│   │   └── discover/
+│   │       └── discover_screen.dart
+│   └── widgets/        # Widgets reutilizables
+│       └── shared/
+│           ├── video/
+│           │   ├── fullscreen_player.dart
+│           │   └── video_background.dart
+│           ├── video_buttons.dart
+│           └── video_scrollable_view.dart
+├── shared/             # Recursos compartidos
+│   └── data/           # Datos locales
+│       └── local_video_posts.dart
+└── main.dart           # Punto de entrada de la aplicación
 ```
+
+### Capas de la Arquitectura
+
+- **Config**: Configuración global (temas, helpers, constantes)
+- **Domain**: Entidades del negocio puras sin dependencias externas
+- **Infrastructure**: Implementaciones técnicas, modelos y adaptadores
+- **Presentation**: UI, widgets, screens y gestión de estado
+- **Shared**: Recursos compartidos entre capas (datos, assets)
 
 ## 🚀 Instalación
 
 1. **Clonar el repositorio**:
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/DeartDev/toktik.git
    cd toktik
    ```
 
@@ -51,63 +78,137 @@ lib/
    flutter pub get
    ```
 
-3. **Ejecutar la aplicación**:
+3. **Agregar videos** (opcional):
+   - Los videos de prueba ya están incluidos en `assets/videos/`
+   - Para usar tus propios videos, reemplázalos asegurándote que sean compatibles (H.264 Baseline/Main Profile)
+
+4. **Ejecutar la aplicación**:
    ```bash
    flutter run
    ```
 
 ## 📦 Dependencias Principales
 
-- **flutter**: SDK de Flutter
-- **provider**: Gestión de estado reactiva
-- **intl**: Formateo de números y fechas internacionalizadas
-- **video_player** (futura integración): Reproducción de videos
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2          # Gestión de estado reactiva
+  intl: ^0.19.0            # Formateo internacional
+  video_player: ^2.10.0    # Reproducción de videos
+  animate_do: ^3.3.4       # Animaciones predefinidas
+```
 
 ## 🎯 Uso
 
-1. Al iniciar la aplicación, se cargarán automáticamente los videos disponibles
-2. Desliza verticalmente para navegar entre diferentes videos
-3. Observa las estadísticas de likes y vistas en la esquina inferior derecha
-4. Los videos se cargan con un efecto de transición suave tipo TikTok
+1. **Inicio**: Al abrir la aplicación, verás un indicador de carga mientras se preparan los videos
+2. **Navegación**: Desliza verticalmente (arriba/abajo) para cambiar entre videos
+3. **Reproducción**: 
+   - Los videos se reproducen automáticamente en loop
+   - Toca la pantalla para pausar/reanudar
+4. **Interacción**: Observa las estadísticas de likes y vistas en la parte inferior derecha
+5. **Caption**: Lee la descripción del video en la parte inferior izquierda
 
 ## 📁 Estructura de Datos
 
-Los videos se definen en formato JSON local con la siguiente estructura:
+Los videos se definen en formato JSON en `lib/shared/data/local_video_posts.dart`:
 
 ```dart
 {
   'name': 'Título del video',
-  'videoUrl': 'assets/videos/video.mp4',
-  'likes': 1000,
-  'views': 5000
+  'videoUrl': 'assets/videos/1.mp4',
+  'likes': 23230,
+  'views': 1523
 }
 ```
 
 ## 🔧 Configuración de Desarrollo
 
 ### Requisitos previos
-- Flutter SDK (versión 3.0 o superior)
-- Dart SDK
-- Android Studio / Xcode (para desarrollo móvil)
-- VS Code o Android Studio como IDE
+- **Flutter SDK**: 3.5.1 o superior
+- **Dart SDK**: Incluido con Flutter
+- **Android Studio** / **Xcode**: Para desarrollo móvil
+- **VS Code** o **Android Studio**: Como IDE
+- **Git**: Para control de versiones
 
-### Variables de entorno
-No se requieren variables de entorno especiales para el desarrollo local.
+### Configuración de Gradle
+- **Gradle**: 8.5
+- **Android Gradle Plugin**: 8.3.0
+- **Kotlin**: 1.9.22
+- **minSdkVersion**: Por defecto de Flutter
+- **targetSdkVersion**: Por defecto de Flutter
+
+### Compatibilidad de Videos
+Los videos deben cumplir con estos requisitos para funcionar en todos los dispositivos:
+- **Codec**: H.264 (AVC)
+- **Profile**: Baseline o Main Profile (Level 3.0 - 4.1)
+- **Formato**: MP4
+- **Resolución recomendada**: 720p o 1080p
+
+Para convertir videos incompatibles:
+```bash
+ffmpeg -i input.mp4 -c:v libx264 -profile:v baseline -level 3.0 -c:a aac output.mp4
+```
 
 ## 🎨 Personalización del Tema
 
-El tema de la aplicación se puede personalizar editando el archivo `lib/config/theme/app_theme.dart`:
+El tema de la aplicación se puede personalizar en `lib/config/theme/app_theme.dart`:
 
 ```dart
 ThemeData getTheme() => ThemeData(
   brightness: Brightness.dark,
-  // Añade más personalizaciones aquí
+  // Personaliza colores, tipografías, etc.
 );
 ```
 
 ## 📝 Próximas Características
 
-- [ ] Reproducción real de videos con video_player
+- [ ] Compartir videos en redes sociales
+- [ ] Sistema de comentarios
+- [ ] Perfil de usuario
+- [ ] Subida de videos desde la cámara
+- [ ] Filtros y efectos de video
+- [ ] Música de fondo personalizada
+- [ ] Sistema de seguimiento de usuarios
+- [ ] Feed personalizado basado en intereses
+- [ ] Integración con backend real (API REST)
+- [ ] Notificaciones push
+
+## 🐛 Solución de Problemas
+
+### Videos no se reproducen
+- Verifica que los videos estén en formato MP4 con codec H.264
+- Revisa que los archivos estén en `assets/videos/`
+- Asegúrate de haber ejecutado `flutter pub get`
+
+### Pantalla negra
+- Puede ser un problema de codec incompatible
+- Intenta con los videos de prueba incluidos
+- Verifica los logs en la consola para ver errores específicos
+
+### Error de Gradle
+- Limpia el proyecto: `flutter clean`
+- Ejecuta: `flutter pub get`
+- Si persiste, verifica las versiones en `android/settings.gradle`
+
+## 👨‍💻 Autor
+
+**DeartDev**
+- GitHub: [@DeartDev](https://github.com/DeartDev)
+
+## 📄 Licencia
+
+Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+
+## 🙏 Agradecimientos
+
+- Inspirado en la interfaz de TikTok
+- Comunidad de Flutter por los excelentes paquetes
+- Recursos de videos de prueba de Google
+
+---
+
+⭐ Si te gustó este proyecto, ¡dale una estrella en GitHub!
 - [ ] Implementación de sonido y controles de volumen
 - [ ] Sistema de comentarios
 - [ ] Funcionalidad de compartir
