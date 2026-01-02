@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:toktik/presentation/widgets/shared/video/video_background.dart';
 import 'package:video_player/video_player.dart';
 
 class FullScreenPlayer extends StatefulWidget {
@@ -6,7 +9,12 @@ class FullScreenPlayer extends StatefulWidget {
   final String videoUrl;
   final String caption;
 
-  const FullScreenPlayer({super.key, required this.videoUrl, required this.caption});
+  const FullScreenPlayer({
+    super.key,
+    required
+    this.videoUrl,
+    required this.caption
+  });
 
   @override
   State<FullScreenPlayer> createState() => _FullScreenPlayerState();
@@ -19,74 +27,87 @@ class _FullScreenPlayerState extends State<FullScreenPlayer> {
   @override
   void initState() {
     super.initState();
-    
-    controller = VideoPlayerController.asset(
-      widget.videoUrl,
-    )..initialize().then((_) {
-        setState(() {});
-        controller.play();
-        controller.setLooping(true);
-      });
+
+  controller = VideoPlayerController.asset( widget.videoUrl )
+    ..setVolume(0)
+    ..setLooping(true)
+    ..play();
+
   }
 
   @override
   void dispose() {
-
     controller.dispose();
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(future: controller.initialize(), builder: (BuildContext context, AsyncSnapshot<void> snapshot) { 
-      if (snapshot.connectionState == ConnectionState.done) {
+
+    return FutureBuilder(
+      future: controller.initialize(),
+      builder: (context, snapshot) {
+        if ( snapshot.connectionState != ConnectionState.done ){
+          return const Center( child: CircularProgressIndicator( strokeWidth: 2 ));
+        }
+
         return GestureDetector(
           onTap: () {
-            if (controller.value.isPlaying) {
+            if ( controller.value.isPlaying ) {
               controller.pause();
-            } else {
-              controller.play();
+              return;
             }
-            setState(() {});
+            controller.play();
+            
           },
-          child: Stack(
-            children: [
-              SizedBox.expand(
-                child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: SizedBox(
-                    width: controller.value.size.width,
-                    height: controller.value.size.height,
-                    child: VideoPlayer(controller),
-                  ),
+          child: AspectRatio(
+            aspectRatio: controller.value.aspectRatio,
+            child: Stack(
+              children: [
+        
+                VideoPlayer(controller),
+        
+                // Gradiente
+                VideoBackground(
+                  stops: const [0.9,1.0],
                 ),
-              ),
-              Positioned(
-                bottom: 30,
-                left: 20,
-                right: 20,
-                child: Text(
-                  widget.caption,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(1, 1),
-                        blurRadius: 2,
-                        color: Colors.black54,
-                      ),
-                    ],
-                  ),
+        
+                // Texto
+                Positioned(
+                  bottom: 50,
+                  left: 20,
+                  child: _VideoCaption( caption: widget.caption )
                 ),
-              ),
-            ],
+        
+        
+              ],
+            ),
           ),
         );
-      } else {
-        return const Center(child: CircularProgressIndicator());
-      }
-    }
+
+      },
+    );
+  }
+}
+
+
+class _VideoCaption extends StatelessWidget {
+
+  final String caption;
+
+
+  const _VideoCaption({super.key, required this.caption });
+
+  @override
+  Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
+    final titleStyle = Theme.of(context).textTheme.titleLarge;
+
+    return SizedBox(
+      width: size.width * 0.6,
+      child: Text( caption, maxLines: 2, style: titleStyle ),
     );
   }
 }

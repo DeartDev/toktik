@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toktik/domain/entities/video_post.dart';
-import 'package:toktik/presentation/widgets/shared/video/fullscreen_player.dart';
 import 'package:toktik/presentation/widgets/shared/video_buttons.dart';
+import 'package:toktik/presentation/widgets/shared/video/fullscreen_player.dart';
 
 /// Widget que muestra una lista de videos en scroll vertical
 ///
